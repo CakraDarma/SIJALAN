@@ -1,22 +1,15 @@
-import dynamic from "next/dynamic";
+import Hero from "@/components/homepage/Hero";
+import Features from "@/components/homepage/Features";
+import Explore from "@/components/homepage/Explore";
 
-const DynamicMap = dynamic(() => import("../../components/Map"), {
-  ssr: false,
-});
-export default function IndexPage() {
+const Home = () => {
   return (
-    <section className="container grid items-center gap-6 pt-6 pb-8 mt-10 md:py-10">
-      <div className="flex max-w-[980px] flex-col items-start gap-2">
-        <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
-          Multiple Markers
-        </h1>
-        <p className="max-w-[750px] text-lg text-muted-foreground sm:text-xl">
-          Leaflet: clustering multiple markers, added location tracking feature.
-        </p>
-      </div>
-      <div className="flex gap-4">
-        <DynamicMap />
-      </div>
-    </section>
+    <div className="flex flex-col gap-4">
+      <Hero imageUrl="/images/hero-home.jpg" />
+      <Features />
+      <Explore />
+    </div>
   );
-}
+};
+
+export default Home;

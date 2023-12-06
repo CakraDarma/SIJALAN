@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  MapPin,
   Building,
   Check,
   ChevronLeft,
@@ -18,9 +19,14 @@ import {
   Trash,
   User,
   X,
+  Home,
+  Search,
 } from "lucide-react";
 
 export const Icons = {
+  search: Search,
+  map: MapPin,
+  home: Home,
   pura: Building,
   upacara: FileDiff,
   inventory: Columns,
