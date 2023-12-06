@@ -37,19 +37,9 @@ function SignIn({ className, ...props }: SignInProps) {
 
   const { mutate: loginAccount, isLoading } = useMutation({
     mutationFn: async ({ email, password }: FormData) => {
-      // const payload: FormData = { email, password };
-      // const { data } = await axios.post(
-      //   `https://gisapis.manpits.xyz/api/login`,
-      //   payload
-      // );
-      // console.log(data, "post");
-      // return data;
-
-      const res = await signIn("credentials", {
-        redirect: false,
+      await signIn("credentials", {
         email: email,
         password: password,
-        // callbackUrl: `${window.location.origin}`,
       });
     },
     onError: (err) => {
