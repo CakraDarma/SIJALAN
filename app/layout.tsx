@@ -5,7 +5,6 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Providers from "@/components/Providers";
-import { SiteHeader } from "@/components/site-header";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
@@ -40,9 +39,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <Providers>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              {/* <div className="relative flex flex-col min-h-screen"> */}
               <div className="flex-1">{children}</div>
-              {/* </div> */}
               <TailwindIndicator />
             </ThemeProvider>
           </Providers>

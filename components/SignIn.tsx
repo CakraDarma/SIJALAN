@@ -11,9 +11,8 @@ import { useForm } from "react-hook-form";
 import { SignInValidator } from "@/lib/validators/auth";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 type FormData = z.infer<typeof SignInValidator>;
@@ -21,8 +20,6 @@ type FormData = z.infer<typeof SignInValidator>;
 interface SignInProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 function SignIn({ className, ...props }: SignInProps) {
-  const router = useRouter();
-
   const {
     handleSubmit,
     register,
@@ -62,7 +59,6 @@ function SignIn({ className, ...props }: SignInProps) {
       toast({
         description: "Login berhasil",
       });
-      // router.refresh();
     },
   });
 

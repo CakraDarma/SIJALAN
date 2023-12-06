@@ -48,8 +48,6 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
-      // console.log("token1", token);
-      // console.log("user1", user);
       if (account && user) {
         return {
           ...token,
@@ -62,11 +60,18 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
+      const res = await fetch("https://gisapis.manpits.xyz/api/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.accessToken}`,
+        },
+      });
+      const user = await res.json();
+
       session.user.accessToken = token.accessToken;
-      session.user.name = token.jti;
-      session.user.email = token.jti;
-      // console.log("token333", token);
-      // console.log("session444", session);
+      session.user.name = user?.data.user.name;
+      session.user.email = user?.data.user.email;
 
       return session;
     },

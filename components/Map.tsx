@@ -13,8 +13,9 @@ const Map = () => {
       zoom={13}
       scrollWheelZoom={true}
       style={{
-        height: "70vh",
+        height: "90vh",
         width: "100%",
+        zIndex: "0",
       }}
     >
       <TileLayer
