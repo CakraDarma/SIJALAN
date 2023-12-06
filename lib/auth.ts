@@ -2,12 +2,6 @@ import { NextAuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
-  // session: {
-  // 	strategy: 'jwt',
-  // },
-  // pages: {
-  // 	signIn: '/sign-in',
-  // },
   providers: [
     CredentialsProvider({
       name: "my-project",
@@ -54,13 +48,13 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
+      // console.log("token1", token);
+      // console.log("user1", user);
       if (account && user) {
         return {
           ...token,
           // @ts-ignore
-          accessToken: user.token,
-          // @ts-ignore
-          refreshToken: user.refreshToken,
+          accessToken: user?.meta.token,
         };
       }
 
@@ -68,15 +62,17 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      // @ts-ignore
       session.user.accessToken = token.accessToken;
-      // @ts-ignore
-      session.user.refreshToken = token.refreshToken;
-      // @ts-ignore
-      session.user.accessTokenExpires = token.accessTokenExpires;
+      session.user.name = token.jti;
+      session.user.email = token.jti;
+      // console.log("token333", token);
+      // console.log("session444", session);
 
       return session;
     },
+    // redirect() {
+    //   return "/";
+    // },
   },
 };
 

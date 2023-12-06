@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { MapContainer, TileLayer } from "react-leaflet"
+import { MapContainer, TileLayer } from "react-leaflet";
 
-import "leaflet/dist/leaflet.css"
-import MarkerMap from "./Marker"
+import "leaflet/dist/leaflet.css";
+import MarkerMap from "./Marker";
 
 const Map = () => {
   // api web
@@ -24,7 +24,7 @@ const Map = () => {
       <MarkerMap />
       {/* <RecenterMap location={[lat, lng]} /> */}
     </MapContainer>
-  )
-}
+  );
+};
 
-export default Map
+export default Map;

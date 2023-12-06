@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useTheme } from "next-themes"
+import * as React from "react";
+import { useTheme } from "next-themes";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme } = useTheme();
 
   return (
     <Button
       variant="ghost"
-      size="icon"
+      // size="icon"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       <svg
@@ -24,7 +24,7 @@ export function ThemeToggle() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+        className="transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0"
       >
         <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
         <path d="M12 3v1"></path>
@@ -46,11 +46,11 @@ export function ThemeToggle() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+        className="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100"
       >
         <path d="M12 3a6.364 6.364 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
       </svg>
       <span className="sr-only">Toggle theme</span>
     </Button>
-  )
+  );
 }

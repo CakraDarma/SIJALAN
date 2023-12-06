@@ -1,50 +1,50 @@
-"use client"
+"use client";
 
-import React, { useCallback, useEffect, useState } from "react"
-import axios from "axios"
-import { Marker, Popup, useMapEvents } from "react-leaflet"
-import { MarkerMuster } from "react-leaflet-muster"
+import React, { useCallback, useEffect, useState } from "react";
+import axios from "axios";
+import { Marker, Popup, useMapEvents } from "react-leaflet";
+import { MarkerMuster } from "react-leaflet-muster";
 
-import "leaflet/dist/leaflet.css"
-import { myIcon } from "@/utils/Icon"
+import "leaflet/dist/leaflet.css";
+import { myIcon } from "@/utils/Icon";
 
 interface Marker {
-  id: string
-  lat: number
-  lng: number
-  kecamatan: string
-  kabupaten: string
-  provinsi: string
+  id: string;
+  lat: number;
+  lng: number;
+  kecamatan: string;
+  kabupaten: string;
+  provinsi: string;
 }
 
 const MarkerMap = () => {
-  const [geolocation, setGeolocation] = useState<Marker[]>([])
-  const [loading, setLoading] = useState(false)
+  const [geolocation, setGeolocation] = useState<Marker[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      setLoading(true)
-      const response = await axios.get("/api/marker")
-      const data = response.data
-      setGeolocation(data)
+      setLoading(true);
+      const response = await axios.get("/api/marker");
+      const data = response.data;
+      setGeolocation(data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    setLoading(false)
-  }, [])
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    fetchData();
+  }, [fetchData]);
 
   const deleteMarkerPosition = async (index: number) => {
-    const updatedLocationData = [...geolocation]
-    const id = updatedLocationData[index].id
-    await axios.delete("/api/marker", { data: { id } })
-    updatedLocationData.splice(index, 1)
-    setGeolocation(updatedLocationData)
-  }
+    const updatedLocationData = [...geolocation];
+    const id = updatedLocationData[index].id;
+    await axios.delete("/api/marker", { data: { id } });
+    updatedLocationData.splice(index, 1);
+    setGeolocation(updatedLocationData);
+  };
 
   const updateMarkerPosition = async (
     index: number,
@@ -53,13 +53,13 @@ const MarkerMap = () => {
     try {
       const response = await axios.get(
         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${newPosition.lat}&longitude=${newPosition.lng}&localityLanguage=en`
-      )
+      );
 
       if (response.data.locality) {
-        const updatedLocationData = [...geolocation]
-        const kecamatan = response.data.locality
-        const kabupaten = response.data.city
-        const provinsi = response.data.principalSubdivision
+        const updatedLocationData = [...geolocation];
+        const kecamatan = response.data.locality;
+        const kabupaten = response.data.city;
+        const provinsi = response.data.principalSubdivision;
         updatedLocationData[index] = {
           ...updatedLocationData[index],
           lat: parseFloat(newPosition.lat),
@@ -67,43 +67,43 @@ const MarkerMap = () => {
           kecamatan,
           kabupaten,
           provinsi,
-        }
-        setGeolocation(updatedLocationData)
+        };
+        setGeolocation(updatedLocationData);
 
-        await axios.patch("/api/marker", updatedLocationData[index])
+        await axios.patch("/api/marker", updatedLocationData[index]);
       }
     } catch (error) {
-      console.error("Error fetching location data", error)
+      console.error("Error fetching location data", error);
     }
-  }
+  };
 
   // tidak punya id
 
   useMapEvents({
     click: async (e) => {
-      const { lat, lng } = e.latlng
+      const { lat, lng } = e.latlng;
       const response = await axios.get(
         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
-      )
+      );
 
       if (response.data.locality) {
-        const kecamatan = response.data.locality
-        const kabupaten = response.data.city
-        const provinsi = response.data.principalSubdivision
+        const kecamatan = response.data.locality;
+        const kabupaten = response.data.city;
+        const provinsi = response.data.principalSubdivision;
         let locationData = {
           lat,
           lng,
           kecamatan,
           kabupaten,
           provinsi,
-        }
-        const responseLocation = await axios.post("/api/marker", locationData)
+        };
+        const responseLocation = await axios.post("/api/marker", locationData);
 
-        setGeolocation([...geolocation, responseLocation.data])
-        console.log(geolocation)
+        setGeolocation([...geolocation, responseLocation.data]);
+        console.log(geolocation);
       }
     },
-  })
+  });
 
   return (
     <div>
@@ -130,12 +130,12 @@ const MarkerMap = () => {
                   <h1>{` ${coordinata.kecamatan}`}</h1>
                 </Popup>
               </Marker>
-            )
+            );
           })}
         </MarkerMuster>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default MarkerMap
+export default MarkerMap;

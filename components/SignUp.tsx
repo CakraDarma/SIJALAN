@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { SignUpValidator } from "@/lib/validators/auth";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 // import { redirect } from "next/navigation";
 
