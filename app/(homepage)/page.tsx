@@ -5,7 +5,7 @@ import Create from "@/components/homepage/Create";
 
 const Home = () => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col ">
       <Hero imageUrl="/images/hero-home.jpg" />
       <Features />
       <Explore />

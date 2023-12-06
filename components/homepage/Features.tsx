@@ -3,7 +3,7 @@ import { Icons } from "../icons";
 
 export default function Features() {
   return (
-    <div className="lg:my-10 ">
+    <div className="lg:my-10 dark:bg-gray-800">
       <div className="mt-24 mb-14 px-[100px] max-w-[1366px] mx-auto">
         <h1 className="mb-3 font-semibold text-blue-500">Apa itu SIJALAN</h1>
         <div className="flex justify-between mb-5">

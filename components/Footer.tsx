@@ -17,7 +17,7 @@ const Footer = () => {
               </div>
               <p className="text-base font-normal leading-normal ">
                 Sistem informasi jalan untuk membantu pengguna mengetahui
-                terkait jalan
+                kondisi terkait jalan
               </p>
             </div>
             <div className="inline-flex flex-col items-start justify-start gap-6">
