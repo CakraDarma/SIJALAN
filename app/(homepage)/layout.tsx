@@ -5,6 +5,7 @@ import { UserAccountNav } from "@/components/UserAccountNav";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/Icons";
+import Footer from "@/components/Footer";
 // import Footer from '@/components/Footer';
 
 interface DashboardLayoutProps {
@@ -42,7 +43,7 @@ export default async function DashboardLayout({
       <main className="flex flex-col flex-1 w-full overflow-hidden">
         {children}
       </main>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
