@@ -23,7 +23,7 @@ export function MainNav({ items, children }: MainNavProps) {
     <div className="flex gap-6 md:gap-10">
       <Link href="/" className="flex items-center gap-2">
         <Icons.logo className="w-8 h-8 sm:h-6 sm:w-6" />
-        <p className="hidden text-lg font-medium text-white text-primary md:block">
+        <p className="hidden text-lg font-medium text-primary md:block">
           {siteConfig.name}
         </p>
       </Link>
@@ -34,10 +34,10 @@ export function MainNav({ items, children }: MainNavProps) {
               key={index}
               href={item.disabled ? "#" : item.href}
               className={cn(
-                "flex items-center text-lg font-medium text-white  hover:border-b-2 border-gray-50 sm:text-sm",
+                "flex items-center text-lg font-medium hover:border-b-2 border-foreground sm:text-sm",
                 item.href.startsWith(`/${segment}`)
-                  ? "text-red-800"
-                  : "text-white",
+                  ? "text-primary"
+                  : "text-foreground",
                 item.disabled && "cursor-not-allowed opacity-80"
               )}
             >

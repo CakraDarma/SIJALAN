@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/UserAvatar";
+import { ThemeToggle } from "./theme-toggle";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   // pick is utility typescript
@@ -28,10 +29,10 @@ export const UserAccountNav = ({ user }: UserAccountNavProps) => {
           className="w-8 h-8"
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="z-10 bg-white" align="end">
+      <DropdownMenuContent className="bg-white " align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            {user.name && <p className="font-medium">{user.name}</p>}
+            {user.name && <p className="font-medium ">{user.name}</p>}
             {user.email && (
               <p className="w-[200px] truncate text-sm text-muted-foreground">
                 {user.email}
@@ -59,6 +60,10 @@ export const UserAccountNav = ({ user }: UserAccountNavProps) => {
         >
           Sign out
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <div className="flex items-center justify-end w-full">
+          <ThemeToggle />
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
