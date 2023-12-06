@@ -21,9 +21,11 @@ import {
   X,
   Home,
   Search,
+  PlusCircle,
 } from "lucide-react";
 
 export const Icons = {
+  add: PlusCircle,
   search: Search,
   map: MapPin,
   home: Home,

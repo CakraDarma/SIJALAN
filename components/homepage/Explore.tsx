@@ -10,7 +10,7 @@ export default function Explore() {
         <div className="w-full md:w-2/3 ">
           <Image
             src="/images/maps.png"
-            alt="Announce"
+            alt="Maps"
             width={1000}
             height={1000}
             quality={100}
@@ -28,7 +28,7 @@ export default function Explore() {
             href="/maps"
             className=" text-xl font-semibold capitalize text-blue-500 border rounded-[5px] border-blue-500  py-2  scale-90 hover:scale-100 hover:bg-blue-500 hover:text-white duration-100 transition transform ease-in hover:border-none w-[130px] flex justify-center gap-2 items-center"
           >
-            <Icons.search className="w-6 h-6 text-blue-400 hover:text-white" />
+            <Icons.search className="w-6 h-6 " />
 
             <div>Cari..</div>
           </Link>
