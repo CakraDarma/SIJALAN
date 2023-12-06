@@ -8,11 +8,9 @@ export default function Features() {
         <h1 className="mb-3 font-semibold text-blue-500">Apa itu SIJALAN</h1>
         <div className="flex justify-between mb-5">
           <div>
+            <h1 className="text-4xl font-semibold ">Menyediakan informasi</h1>
             <h1 className="text-4xl font-semibold ">
-              Menyediakan daftar informasi
-            </h1>
-            <h1 className="text-4xl font-semibold ">
-              tentang kondisi jalan yang paling lengkap
+              tentang kondisi jalan terlengkap
             </h1>
           </div>
           <div>

@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Explore() {
   return (
-    <div className="mb-32 px-[100px] max-w-[1366px] mx-auto" id="maps">
+    <div className="my-32 px-[100px] max-w-[1366px] mx-auto" id="maps">
       <div className="flex flex-col justify-between gap-20 md:flex-row">
         <div className="w-full md:w-2/3 ">
           <Image
