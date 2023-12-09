@@ -1,95 +1,175 @@
-"use client"
+"use client";
 
-import axios from "axios"
-import { FeatureGroup, MapContainer, Polyline, TileLayer } from "react-leaflet"
-import { EditControl } from "react-leaflet-draw"
+import axios from "axios";
+import { FeatureGroup, MapContainer, TileLayer, Popup } from "react-leaflet";
+import { EditControl } from "react-leaflet-draw";
+import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
+import { useEffect, useRef, useState } from "react";
+import L from "leaflet";
+import polyline from "polyline-encoded";
+import Link from "next/link";
+import RoadInfo from "@/components/RoadInfo";
 
-import "leaflet/dist/leaflet.css"
-import "leaflet-draw/dist/leaflet.draw.css"
-import { useEffect, useRef, useState } from "react"
-import L from "leaflet"
-import polyline from "polyline-encoded"
-
-const Map = () => {
-  const [encodedPolylines, setEncodedPolylines] = useState([])
-  const featureGroupRef = useRef()
-
+const Map = (session) => {
+  const [encodedPolylines, setEncodedPolylines] = useState([]);
+  const [jalan, setJalan] = useState();
+  const featureGroupRef = useRef();
   async function fetchData() {
     try {
-      const response = await axios.get("/api/polyline")
-      setEncodedPolylines(response.data)
+      const response = await axios.get(
+        "https://gisapis.manpits.xyz/api/ruasjalan",
+        {
+          headers: {
+            Authorization: `Bearer ${session.user.accessToken}`,
+          },
+        }
+      );
+      setEncodedPolylines(response.data.ruasjalan);
     } catch (error) {
-      console.error("Terjadi kesalahan dalam pengambilan data:", error)
+      console.error("Terjadi kesalahan dalam pengambilan data:", error);
     }
   }
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (featureGroupRef.current) {
-      featureGroupRef.current.clearLayers()
+      featureGroupRef.current.clearLayers();
       encodedPolylines?.map((data) => {
-        const decodedCoords = polyline.decode(data.position)
-        const id = data.id
+        const decodedCoords = polyline.decode(data.paths);
+        const id = data.id;
         const polylineLayer = L.polyline(decodedCoords, {
           id,
-        })
-        featureGroupRef.current.addLayer(polylineLayer)
-      })
+        });
+        polylineLayer.on("click", onPolylineClick);
+        featureGroupRef.current.addLayer(polylineLayer);
+      });
     }
-  }, [encodedPolylines])
+  }, [encodedPolylines]);
 
   const onCreated = async (e) => {
-    const { layer } = e
+    const { layer } = e;
 
     const coordinates = layer.getLatLngs().map((latLng) => ({
       lat: latLng.lat,
       lng: latLng.lng,
-    }))
+    }));
     const encodedPolyline = await polyline.encode(
       coordinates.map((coord) => [coord.lat, coord.lng])
-    )
-    const polylines = {
-      position: encodedPolyline,
-    }
-    const response = await axios.post("/api/polyline", polylines)
-    setEncodedPolylines((layers) => [...layers, response.data])
-  }
+    );
+    const body = {
+      paths: encodedPolyline,
+      desa_id: 473,
+      kode_ruas: "R15435",
+      nama_ruas: "10-12",
+      panjang: 100,
+      lebar: 10,
+      eksisting_id: 2,
+      kondisi_id: 2,
+      jenisjalan_id: 1,
+      keterangan: "oke",
+    };
+    await axios.post("https://gisapis.manpits.xyz/api/ruasjalan", body, {
+      headers: {
+        Authorization: `Bearer ${session.user.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    fetchData();
+  };
 
   const onEdited = async (e) => {
     const {
       layers: { _layers },
-    } = e
+    } = e;
 
-    let id
-    let encodedPolyline
+    let id;
+    let encodedPolyline;
     Object.values(_layers).map(({ options, editing }) => {
       const coordinates = editing.latlngs[0].map((latLng) => ({
         lat: latLng.lat,
         lng: latLng.lng,
-      }))
-      id = options.id
+      }));
+      id = options.id;
       encodedPolyline = polyline.encode(
         coordinates.map((coord) => [coord.lat, coord.lng])
-      )
-    })
-    await axios.patch("/api/polyline", { id, encodedPolyline })
-    fetchData()
-  }
+      );
+    });
+
+    const body = {
+      paths: encodedPolyline,
+      desa_id: 473,
+      kode_ruas: "R15435",
+      nama_ruas: "10-12",
+      panjang: 100,
+      lebar: 10,
+      eksisting_id: 2,
+      kondisi_id: 2,
+      jenisjalan_id: 1,
+      keterangan: "oke",
+    };
+    await axios.put(`https://gisapis.manpits.xyz/api/ruasjalan/${id}`, body, {
+      headers: {
+        Authorization: `Bearer ${session.user.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    fetchData();
+  };
 
   const onDeleted = async (e) => {
     const {
       layers: { _layers },
-    } = e
-    let id
+    } = e;
+    let id;
 
     Object.values(_layers).map(({ options }) => {
-      id = options.id
-    })
-    await axios.delete("/api/polyline", { data: { id } })
-    fetchData()
-  }
+      id = options.id;
+    });
+    await axios.delete(`https://gisapis.manpits.xyz/api/ruasjalan/${id}`, {
+      headers: {
+        Authorization: `Bearer ${session.user.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    fetchData();
+  };
+
+  const onPolylineClick = async (e) => {
+    const { target } = e;
+    const id = target.options.id;
+    try {
+      const response = await axios.get(
+        `https://gisapis.manpits.xyz/api/ruasjalan/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.user.accessToken}`,
+          },
+        }
+      );
+
+      // const response2 = await axios.get(
+      //   `https://gisapis.manpits.xyz/api/mjenisjalan`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${session.user.accessToken}`,
+      //     },
+      //   }
+      // );
+      // const jenisJalans = response2.data.eksisting
+
+      // console.log(response2);
+
+      setJalan(response.data.ruasjalan);
+    } catch (error) {
+      console.error(
+        "Terjadi kesalahan dalam pengambilan data ruas jalan:",
+        error
+      );
+    }
+  };
 
   return (
     <MapContainer
@@ -97,8 +177,9 @@ const Map = () => {
       zoom={13}
       scrollWheelZoom={true}
       style={{
-        height: "70vh",
+        height: "100vh",
         width: "100%",
+        zIndex: "0",
       }}
     >
       <FeatureGroup ref={featureGroupRef}>
@@ -116,13 +197,18 @@ const Map = () => {
             polygon: false,
           }}
         />
+        <Popup>
+          <Link href={`/road/${jalan?.id}`}>
+            <RoadInfo ruasJalan={jalan} />
+          </Link>
+        </Popup>
       </FeatureGroup>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
     </MapContainer>
-  )
-}
+  );
+};
 
-export default Map
+export default Map;
