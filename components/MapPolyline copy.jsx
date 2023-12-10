@@ -11,7 +11,7 @@ import polyline from "polyline-encoded";
 import Link from "next/link";
 import RoadInfo from "@/components/RoadInfo";
 
-const Map = ({ session, updateParentData }) => {
+const Map = (session) => {
   const [encodedPolylines, setEncodedPolylines] = useState([]);
   const [jalan, setJalan] = useState();
   const featureGroupRef = useRef();
@@ -59,8 +59,25 @@ const Map = ({ session, updateParentData }) => {
     const encodedPolyline = await polyline.encode(
       coordinates.map((coord) => [coord.lat, coord.lng])
     );
-    updateParentData(encodedPolyline);
-    return encodedPolyline;
+    const body = {
+      paths: encodedPolyline,
+      desa_id: 473,
+      kode_ruas: "R15435",
+      nama_ruas: "10-12",
+      panjang: 100,
+      lebar: 10,
+      eksisting_id: 2,
+      kondisi_id: 2,
+      jenisjalan_id: 1,
+      keterangan: "oke",
+    };
+    await axios.post("https://gisapis.manpits.xyz/api/ruasjalan", body, {
+      headers: {
+        Authorization: `Bearer ${session.user.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    fetchData();
   };
 
   const onEdited = async (e) => {
