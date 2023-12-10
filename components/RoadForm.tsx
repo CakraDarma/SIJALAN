@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Desa, Eksisting, JenisJalan, KondisiJalan } from "@/types/api";
 import { RoadFormValidator } from "@/lib/validators/RoadForm";
 import { z } from "zod";
@@ -10,6 +10,8 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+
 interface RoadFormProps {
   listDesa: Desa;
   listEksisting: Eksisting;
@@ -29,6 +31,8 @@ export default function RoadForm({
   listKondisiJalan,
   session,
 }: RoadFormProps) {
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -88,6 +92,7 @@ export default function RoadForm({
       toast({
         description: "Berhasil menambahkan data",
       });
+      router.push(`/dashboard`);
     },
   });
 

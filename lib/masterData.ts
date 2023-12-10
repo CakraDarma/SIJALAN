@@ -65,3 +65,20 @@ export async function getKondisiJalan() {
     console.error("Terjadi kesalahan dalam pengambilan data:", error);
   }
 }
+
+export async function getRoad(id: string) {
+  const session = await getAuthSession();
+  try {
+    const response = await axios.get(
+      `https://gisapis.manpits.xyz/api/ruasjalan/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.accessToken}`,
+        },
+      }
+    );
+    return response?.data.ruasjalan;
+  } catch (error) {
+    console.error("Terjadi kesalahan dalam pengambilan data:", error);
+  }
+}

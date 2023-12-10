@@ -10,25 +10,33 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import dynamic from "next/dynamic";
-interface RoadFormProps {
+import { useRouter, useParams } from "next/navigation";
+import { RoadData } from "@/types/RoadData";
+
+interface RoadFormEditProps {
   listDesa: Desa;
   listEksisting: Eksisting;
   listJenisJalan: JenisJalan;
   listKondisiJalan: KondisiJalan;
   session: any;
+  dataForm: RoadData;
 }
 const DynamicMap = dynamic(() => import("@/components/MapPolyline"), {
   ssr: false,
 });
 type FormData = z.infer<typeof RoadFormValidator>;
 
-export default function RoadForm({
+export default function RoadFormEdit({
   listDesa,
   listEksisting,
   listJenisJalan,
   listKondisiJalan,
   session,
-}: RoadFormProps) {
+  dataForm,
+}: RoadFormEditProps) {
+  const params = useParams();
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -36,7 +44,18 @@ export default function RoadForm({
     setValue,
   } = useForm<FormData>({
     resolver: zodResolver(RoadFormValidator),
-    defaultValues: {},
+    defaultValues: {
+      nama: dataForm.nama_ruas,
+      kode: dataForm.kode_ruas,
+      jenisId: dataForm.jenisjalan_id,
+      desaId: dataForm.desa_id,
+      deskripsi: dataForm.keterangan,
+      eksistingId: dataForm.eksisting_id,
+      kondisiId: dataForm.kondisi_id,
+      lebar: dataForm.lebar,
+      panjang: dataForm.panjang,
+      paths: dataForm.paths,
+    },
   });
 
   const { mutate: postKegiatan, isLoading } = useMutation({
@@ -65,8 +84,8 @@ export default function RoadForm({
         keterangan: deskripsi,
       };
 
-      const { data } = await axios.post(
-        `https://gisapis.manpits.xyz/api/ruasjalan`,
+      const { data } = await axios.put(
+        `https://gisapis.manpits.xyz/api/ruasjalan/${params.mapsId}`,
         payload,
         {
           headers: {
@@ -88,6 +107,7 @@ export default function RoadForm({
       toast({
         description: "Berhasil menambahkan data",
       });
+      router.push(`/dashboard`);
     },
   });
 
@@ -147,11 +167,11 @@ export default function RoadForm({
             <select
               id="jenisJalan"
               className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
-              onChange={(e) => setValue("jenisId", parseInt(e.target.value))}
+              {...register("jenisId", {
+                valueAsNumber: true,
+              })}
             >
-              <option value={3} className="text-gray-500">
-                -- Pilih Jenis Jalan --
-              </option>
+              <option className="text-gray-500">-- Pilih Jenis Jalan --</option>
               {listJenisJalan.map((data) => (
                 <option key={data.id} value={parseInt(data.id)}>
                   {data.jenisjalan}
@@ -178,7 +198,9 @@ export default function RoadForm({
           </label>
           <select
             id="desa"
-            onChange={(e) => setValue("desaId", parseInt(e.target.value))}
+            {...register("desaId", {
+              valueAsNumber: true,
+            })}
             className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
           >
             <option value="" className="text-gray-500">
@@ -234,7 +256,9 @@ export default function RoadForm({
           </label>
           <select
             id="eksisting"
-            onChange={(e) => setValue("eksistingId", parseInt(e.target.value))}
+            {...register("eksistingId", {
+              valueAsNumber: true,
+            })}
             className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
           >
             <option value="" className="text-gray-500">
@@ -258,7 +282,10 @@ export default function RoadForm({
           </label>
           <select
             id="kondisi"
-            onChange={(e) => setValue("kondisiId", parseInt(e.target.value))}
+            // onChange={(e) => setValue("kondisiId", parseInt(e.target.value))}
+            {...register("kondisiId", {
+              valueAsNumber: true,
+            })}
             className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
           >
             <option value="" className="text-gray-500">
