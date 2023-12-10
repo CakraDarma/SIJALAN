@@ -1,20 +1,95 @@
+"use client";
 import React from "react";
 import { Desa, Eksisting, JenisJalan, KondisiJalan } from "@/types/api";
+import { RoadFormValidator } from "@/lib/validators/RoadForm";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
 interface RoadFormProps {
   listDesa: Desa;
   listEksisting: Eksisting;
   listJenisJalan: JenisJalan;
   listKondisiJalan: KondisiJalan;
+  session: any;
 }
+
+type FormData = z.infer<typeof RoadFormValidator>;
 
 export default function RoadForm({
   listDesa,
   listEksisting,
   listJenisJalan,
   listKondisiJalan,
+  session,
 }: RoadFormProps) {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setValue,
+  } = useForm<FormData>({
+    resolver: zodResolver(RoadFormValidator),
+    defaultValues: {},
+  });
+
+  const { mutate: postKegiatan, isLoading } = useMutation({
+    mutationFn: async ({
+      nama,
+      kode,
+      jenisId,
+      desaId,
+      deskripsi,
+      eksistingId,
+      kondisiId,
+      lebar,
+      panjang,
+      paths,
+    }: FormData) => {
+      const payload = {
+        paths: paths,
+        desa_id: desaId,
+        kode_ruas: kode,
+        nama_ruas: nama,
+        panjang: panjang,
+        lebar: lebar,
+        eksisting_id: eksistingId,
+        kondisi_id: kondisiId,
+        jenisjalan_id: jenisId,
+        keterangan: deskripsi,
+      };
+
+      const { data } = await axios.post(
+        `https://gisapis.manpits.xyz/api/ruasjalan`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${session.user.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return data;
+    },
+
+    onError: () => {
+      return toast({
+        title: "Terjadi kesalahan.",
+        description: "Tidak dapat menambahkan data, silakan coba lagi.",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      toast({
+        description: "Berhasil menambahkan data",
+      });
+    },
+  });
   return (
-    <form>
+    <form onSubmit={handleSubmit((e) => postKegiatan(e))}>
       {/* informasi umum ruas jalan */}
       <div className="mt-5 mb-6">
         <div>
@@ -26,12 +101,15 @@ export default function RoadForm({
           </label>
 
           <input
-            // onChange={(e) => setRoomName(e.target.value)}
+            {...register("nama")}
             type="text"
             id="ruasJalanName"
             className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
             required
           ></input>
+          {errors?.nama && (
+            <p className="px-1 text-xs text-red-600">{errors.nama.message}</p>
+          )}
         </div>
         <div className="flex gap-2">
           <div className="w-full">
@@ -42,12 +120,15 @@ export default function RoadForm({
               Kode Ruas jalan<span className="text-blue-500">*</span>
             </label>
             <input
-              // onChange={(e) => setBed(parseInt(e.target.value))}
+              {...register("kode")}
               type="text"
               id="kodeJalan"
               className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
               required
             ></input>
+            {errors?.kode && (
+              <p className="px-1 text-xs text-red-600">{errors.kode.message}</p>
+            )}
           </div>
           <div className="w-full">
             <label
@@ -58,20 +139,23 @@ export default function RoadForm({
             </label>
             <select
               id="jenisJalan"
-              name="jenisJalan"
-              // value={selectedCity}
-              // onChange={handleCityChange}
               className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
+              onChange={(e) => setValue("jenisId", parseInt(e.target.value))}
             >
-              <option value="" className="text-gray-500">
+              <option value={3} className="text-gray-500">
                 -- Pilih Jenis Jalan --
               </option>
               {listJenisJalan.map((data) => (
-                <option key={data.id} value={data.id}>
+                <option key={data.id} value={parseInt(data.id)}>
                   {data.jenisjalan}
                 </option>
               ))}
             </select>
+            {errors?.jenisId && (
+              <p className="px-1 text-xs text-red-600">
+                {errors.jenisId.message}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -87,9 +171,7 @@ export default function RoadForm({
           </label>
           <select
             id="desa"
-            name="desa"
-            // value={selectedCity}
-            // onChange={handleCityChange}
+            onChange={(e) => setValue("desaId", parseInt(e.target.value))}
             className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
           >
             <option value="" className="text-gray-500">
@@ -101,6 +183,9 @@ export default function RoadForm({
               </option>
             ))}
           </select>
+          {errors?.desaId && (
+            <p className="px-1 text-xs text-red-600">{errors.desaId.message}</p>
+          )}
         </div>
         {/* <ComboBox /> */}
       </div>
@@ -116,6 +201,16 @@ export default function RoadForm({
         </label>
         <div className="mb-6 border-2 border-blue-300 rounded-lg">
           {/* <MapComponent onLocationSelected={handleLocationSelected} /> */}
+          <input
+            {...register("paths")}
+            type="text"
+            id="paths"
+            className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
+            required
+          ></input>
+          {errors?.paths && (
+            <p className="px-1 text-xs text-red-600">{errors.paths.message}</p>
+          )}
         </div>
       </div>
 
@@ -133,9 +228,7 @@ export default function RoadForm({
           </label>
           <select
             id="eksisting"
-            name="eksisting"
-            // value={selectedCity}
-            // onChange={handleCityChange}
+            onChange={(e) => setValue("eksistingId", parseInt(e.target.value))}
             className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
           >
             <option value="" className="text-gray-500">
@@ -147,6 +240,11 @@ export default function RoadForm({
               </option>
             ))}
           </select>
+          {errors?.eksistingId && (
+            <p className="px-1 text-xs text-red-600">
+              {errors.eksistingId.message}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="kondisi" className="mr-2 text-gray-900 text-medium">
@@ -154,9 +252,7 @@ export default function RoadForm({
           </label>
           <select
             id="kondisi"
-            name="kondisi"
-            // value={selectedCity}
-            // onChange={handleCityChange}
+            onChange={(e) => setValue("kondisiId", parseInt(e.target.value))}
             className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
           >
             <option value="" className="text-gray-500">
@@ -168,6 +264,11 @@ export default function RoadForm({
               </option>
             ))}
           </select>
+          {errors?.kondisiId && (
+            <p className="px-1 text-xs text-red-600">
+              {errors.kondisiId.message}
+            </p>
+          )}
         </div>
 
         <div className="flex gap-2">
@@ -176,24 +277,38 @@ export default function RoadForm({
               Panjang<span className="text-blue-500">*</span>
             </label>
             <input
-              // onChange={(e) => setBed(parseInt(e.target.value))}
-              type="text"
+              {...register("panjang", {
+                valueAsNumber: true,
+              })}
+              type="number"
               id="panjang"
               className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
               required
             ></input>
+            {errors?.panjang && (
+              <p className="px-1 text-xs text-red-600">
+                {errors.panjang.message}
+              </p>
+            )}
           </div>
           <div className="w-full">
             <label className="mr-2 text-gray-900 text-medium" htmlFor="lebar">
               Lebar<span className="text-blue-500">*</span>
             </label>
             <input
-              // onChange={(e) => setBath(parseInt(e.target.value))}
-              type="text"
+              {...register("lebar", {
+                valueAsNumber: true,
+              })}
+              type="number"
               id="lebar"
               className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
               required
             ></input>
+            {errors?.lebar && (
+              <p className="px-1 text-xs text-red-600">
+                {errors.lebar.message}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -207,21 +322,22 @@ export default function RoadForm({
           Deskripsi<span className="text-blue-500">*</span>
         </label>
         <textarea
-          // onChange={(e) => setDescription(e.target.value)}
+          {...register("deskripsi")}
           id="deskripsi"
           placeholder="Tambahkan deskripsi keterangan terkait jalan"
           required
           className="border text-gray-900 text-sm rounded-lg focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5 border-blue-300 dark:placeholder-gray-400 resize-none h-40"
         ></textarea>
+        {errors?.deskripsi && (
+          <p className="px-1 text-xs text-red-600">
+            {errors.deskripsi.message}
+          </p>
+        )}
       </div>
 
-      <button
-        // onClick={handleSubmit}
-        type="submit"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      >
+      <Button className="bg-blue-800" disabled={isLoading}>
         Submit
-      </button>
+      </Button>
     </form>
   );
 }

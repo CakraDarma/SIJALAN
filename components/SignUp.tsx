@@ -41,7 +41,6 @@ function SignUp({ className, ...props }: SignUpProps) {
         `https://gisapis.manpits.xyz/api/register`,
         payload
       );
-      console.log(data);
       return data;
     },
     onError: () => {

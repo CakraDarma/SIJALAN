@@ -1,4 +1,5 @@
 import RoadForm from "@/components/RoadForm";
+import { getAuthSession } from "@/lib/auth";
 import {
   getDesa,
   getEksisting,
@@ -14,6 +15,7 @@ export default async function CreateRoadPage() {
   const listJenisJalan: JenisJalan = await getJenisJalan();
   const listKondisiJalan: KondisiJalan = await getKondisiJalan();
 
+  const session = await getAuthSession();
   return (
     <div className="py-5 px-[50px] w-full mx-auto shadow-lg bg-white-50 mt-5 drop-shadow-2xl bg-white container ">
       <h1 className="text-2xl font-semibold ">
@@ -24,6 +26,7 @@ export default async function CreateRoadPage() {
         listEksisting={listEksisting}
         listJenisJalan={listJenisJalan}
         listKondisiJalan={listKondisiJalan}
+        session={session}
       />
     </div>
   );
