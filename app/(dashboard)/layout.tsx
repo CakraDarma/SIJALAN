@@ -6,7 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/Icons";
 import Footer from "@/components/Footer";
-// import Footer from '@/components/Footer';
+import { redirect } from "next/navigation";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -16,6 +16,9 @@ export default async function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
   const session = await getAuthSession();
+  if (!session) {
+    redirect("/sign-in");
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -40,7 +43,7 @@ export default async function DashboardLayout({
           )}
         </div>
       </header>
-      <main className="flex flex-col flex-1 w-full overflow-hidden">
+      <main className="flex flex-col flex-1 w-full mt-10 overflow-hidden">
         {children}
       </main>
       <Footer />

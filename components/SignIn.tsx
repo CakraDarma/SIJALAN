@@ -23,6 +23,8 @@ function SignIn({ className, ...props }: SignInProps) {
   const {
     handleSubmit,
     register,
+    // reset,
+    // getValues,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(SignInValidator),
