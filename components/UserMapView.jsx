@@ -153,7 +153,7 @@ const Map = ({ session }) => {
           }}
         />
         <Popup>
-          <Link href={`/road/${jalan?.id}`}>
+          <Link href={`/maps/${jalan?.id}`}>
             <RoadInfo ruasJalan={jalan} />
           </Link>
         </Popup>
