@@ -15,6 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
 
 const Columns: ColumnDef<RoadForm>[] = [
   {
@@ -55,8 +57,8 @@ const Columns: ColumnDef<RoadForm>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const data = row.original;
+    cell: async ({ row }) => {
+      const datas = row.original;
 
       return (
         <DropdownMenu>
@@ -68,16 +70,40 @@ const Columns: ColumnDef<RoadForm>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-            // onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              <Link href={"/maps"}>View</Link>
+            <DropdownMenuItem>
+              <Link href={`/maps/${datas.id}`}>View</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/maps/${data.id}/edit`}>Update</Link>
+              <Link href={`/maps/${datas.id}/edit`}>Update</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-500 "
+              onClick={async () => {
+                try {
+                  await axios.delete(
+                    `https://gisapis.manpits.xyz/api/ruasjalan/${datas.id}`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${datas.session.user.accessToken}`,
+                      },
+                    }
+                  );
+                  toast({
+                    description: "Data Anda berhasil dihapus.",
+                  });
+                } catch {
+                  return toast({
+                    title: "Terjadi kesalahan.",
+                    description:
+                      "Data tidak berhasil dihapus. Silakan coba lagi.",
+                    variant: "destructive",
+                  });
+                }
+              }}
+            >
+              <Link href={`/`}>Delete</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

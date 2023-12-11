@@ -5,15 +5,18 @@ import React from "react";
 import Columns from "@/components/Columns";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { getAuthSession } from "@/lib/auth";
 
 export default async function DashboardPage() {
+  const session = await getAuthSession();
   const dataForm: RoadData[] = await getRoads();
   const data = dataForm.map(({ id, kode_ruas, nama_ruas, lebar, panjang }) => ({
     id,
     lebar: lebar,
     panjang: panjang,
-    nama: nama_ruas,
-    kode: kode_ruas,
+    kode: nama_ruas,
+    nama: kode_ruas,
+    session: session,
   }));
 
   return (
