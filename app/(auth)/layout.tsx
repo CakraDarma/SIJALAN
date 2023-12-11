@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAuthSession } from '@/lib/auth';
+import { getAuthSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 import { Icons } from "@/components/Icons";
@@ -12,7 +12,7 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
   const session = await getAuthSession();
 
   if (session) {
-  	redirect('/');
+    redirect("/");
   }
   const divStyle = {
     backgroundImage: `url(/images/hero.jpg)`,

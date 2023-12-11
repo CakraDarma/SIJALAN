@@ -11,3 +11,11 @@ export interface RoadData {
   jenisjalan_id: number;
   keterangan: string;
 }
+
+export interface RoadForm {
+  id: number;
+  lebar: number;
+  panjang: number;
+  kode: string;
+  nama: string;
+}

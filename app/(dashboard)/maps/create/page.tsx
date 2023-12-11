@@ -17,7 +17,7 @@ export default async function CreateRoadPage() {
 
   const session = await getAuthSession();
   return (
-    <div className="py-5 px-[50px] w-full mx-auto shadow-lg bg-white-50 mt-5 drop-shadow-2xl bg-white container ">
+    <div className="py-5 px-[50px] w-full mx-auto   mt-5  bg-background container ">
       <h1 className="text-2xl font-semibold ">
         Tambahkan Informasi Ruas Jalan
       </h1>

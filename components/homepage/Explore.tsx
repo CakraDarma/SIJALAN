@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { Icons } from "../icons";
+import { Icons } from "../Icons";
 import Image from "next/image";
 
 export default function Explore() {
