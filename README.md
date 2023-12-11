@@ -1,13 +1,31 @@
-# next-template-debug
+# SIJALAN - Sistem Informasi JALAN (Road Information System)
 
-I use this repo for debugging on CodeSandbox.
+![alt](/public/og.jpg)
 
-## Usage
+Built with the Next.js App Router, TypeScript, Tailwind, React-Leaflet
 
-1. Visit https://codesandbox.io/p/sandbox/github/shadcn/next-template-debug/tree/main
-2. Click the "Fork" button to create a new sandbox
-3. Add your code to the sandbox.
+## Features
 
-## License
+- Modern data fetching using React-Query
+- isplay an interactive map using Leaflet to showcase road information
+- Forms or interfaces for adding and updating road data on the map
+- Show detailed information about a road when clicked on the map
+- Allow users to edit the geometry or properties of existing roads.
+- User authentication to secure data and manage access permissions.
+- Responsive interface design to support usage on various devices.
+- Dark mode using shadcn
 
-Licensed under the [MIT license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md).
+## Getting started
+
+To get started with this project, run
+
+```bash
+  git clone -b starter-code https://github.com/CakraDarma/SIJALAN.git
+```
+
+and copy these .env.example variables into a separate .env file:
+
+```bash
+JWT_SECRET=
+
+```
