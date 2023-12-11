@@ -12,8 +12,8 @@ export default async function DashboardPage() {
     id,
     lebar: lebar,
     panjang: panjang,
-    kode: nama_ruas,
-    nama: kode_ruas,
+    nama: nama_ruas,
+    kode: kode_ruas,
   }));
 
   return (

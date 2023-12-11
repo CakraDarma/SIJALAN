@@ -16,7 +16,7 @@ export default function Create() {
               </h1>
             </div>
             <Link
-              href="/create"
+              href="/maps/create"
               className=" text-xl font-semibold capitalize text-blue-500 border rounded-[5px] border-blue-500  py-2  scale-90 hover:scale-100 hover:bg-blue-500 hover:text-white duration-100 transition transform ease-in hover:border-none w-[150px] flex justify-center gap-2 items-center"
             >
               <Icons.add />

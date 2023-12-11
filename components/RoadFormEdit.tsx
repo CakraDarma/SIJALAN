@@ -21,7 +21,7 @@ interface RoadFormEditProps {
   session: any;
   dataForm: RoadData;
 }
-const DynamicMap = dynamic(() => import("@/components/MapPolyline"), {
+const DynamicMap = dynamic(() => import("@/components/UserMap"), {
   ssr: false,
 });
 type FormData = z.infer<typeof RoadFormValidator>;
@@ -229,16 +229,6 @@ export default function RoadFormEdit({
         </label>
         <div className="mb-6 border-2 border-blue-300 rounded-lg">
           <DynamicMap session={session} updateParentData={receivePaths} />
-          {/* <input
-            {...register("paths")}
-            type="text"
-            id="paths"
-            className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
-            required
-          ></input>
-          {errors?.paths && (
-            <p className="px-1 text-xs text-red-600">{errors.paths.message}</p>
-          )} */}
         </div>
       </div>
 

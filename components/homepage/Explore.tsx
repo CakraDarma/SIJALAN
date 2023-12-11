@@ -19,7 +19,7 @@ export default function Explore() {
         </div>
         <div className="flex flex-col w-1/3 py-10 md:gap-5 md:mt-14">
           <div>
-            <h1 className="text-3xl font-semibold ">Ekspolrasi Jalan</h1>
+            <h1 className="text-3xl font-semibold ">Eksplorasi Jalan</h1>
             <h1 className="mt-5 text-lg text-gray-500">
               Dapatkan informasi jalan terkini dengan peta interaktif
             </h1>
@@ -30,7 +30,7 @@ export default function Explore() {
           >
             <Icons.search className="w-6 h-6 " />
 
-            <div>Cari..</div>
+            <div>Cari</div>
           </Link>
         </div>
       </div>

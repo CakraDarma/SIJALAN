@@ -11,7 +11,7 @@ import polyline from "polyline-encoded";
 import Link from "next/link";
 import RoadInfo from "@/components/RoadInfo";
 
-const Map = (session) => {
+const Map = ({ session }) => {
   const [encodedPolylines, setEncodedPolylines] = useState([]);
   const [jalan, setJalan] = useState();
   const featureGroupRef = useRef();

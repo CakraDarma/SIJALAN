@@ -8,6 +8,10 @@ export const userNavConfig = [
     href: "/dashboard",
   },
   {
+    title: "Maps",
+    href: "/maps",
+  },
+  {
     title: "Profil",
     href: "/settings",
   },

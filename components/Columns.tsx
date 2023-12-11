@@ -42,7 +42,7 @@ const Columns: ColumnDef<RoadForm>[] = [
     accessorKey: "panjang",
     header: "Panjang",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("panjang")} Km</div>
+      <div className="capitalize">{row.getValue("panjang")} M</div>
     ),
   },
   {
