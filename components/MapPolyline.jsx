@@ -182,7 +182,7 @@ const Map = ({ session, updateParentData }) => {
         />
         <Popup>
           <Link href={`/maps/${jalan?.id}`}>
-            <RoadInfo ruasJalan={jalan} />
+            <RoadInfo ruasJalan={jalan} session={session} />
           </Link>
         </Popup>
       </FeatureGroup>

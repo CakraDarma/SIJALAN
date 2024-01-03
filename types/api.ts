@@ -1,16 +1,16 @@
 export type Desa = {
-  id: string;
+  id: number;
   value: string;
 }[];
 export type Eksisting = {
-  id: string;
+  id: number;
   eksisting: string;
 }[];
 export type JenisJalan = {
-  id: string;
+  id: number;
   jenisjalan: string;
 }[];
 export type KondisiJalan = {
-  id: string;
+  id: number;
   kondisi: string;
 }[];

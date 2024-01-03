@@ -173,7 +173,7 @@ export default function RoadFormEdit({
             >
               <option className="text-gray-500">-- Pilih Jenis Jalan --</option>
               {listJenisJalan.map((data) => (
-                <option key={data.id} value={parseInt(data.id)}>
+                <option key={data.id} value={data.id}>
                   {data.jenisjalan}
                 </option>
               ))}
