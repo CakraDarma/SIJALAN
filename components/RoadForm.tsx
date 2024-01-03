@@ -1,6 +1,14 @@
 "use client";
-import React from "react";
-import { Desa, Eksisting, JenisJalan, KondisiJalan } from "@/types/api";
+import React, { useEffect, useState } from "react";
+import {
+  Desa,
+  Eksisting,
+  JenisJalan,
+  Kabupaten,
+  Kecamatan,
+  KondisiJalan,
+  Provinsi,
+} from "@/types/api";
 import { RoadFormValidator } from "@/lib/validators/RoadForm";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -11,9 +19,10 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { getDesa, getKabupaten, getKecamatan } from "@/lib/masterData";
 
 interface RoadFormProps {
-  listDesa: Desa;
+  listProvinsi: Provinsi;
   listEksisting: Eksisting;
   listJenisJalan: JenisJalan;
   listKondisiJalan: KondisiJalan;
@@ -25,7 +34,7 @@ const DynamicMap = dynamic(() => import("@/components/MapPolyline"), {
 type FormData = z.infer<typeof RoadFormValidator>;
 
 export default function RoadForm({
-  listDesa,
+  listProvinsi,
   listEksisting,
   listJenisJalan,
   listKondisiJalan,
@@ -100,6 +109,57 @@ export default function RoadForm({
     setValue("paths", data);
   }
 
+  const [selectedIdProvinsi, setSelectedIdProvinsi] = useState<
+    number | undefined
+  >();
+  const [selectedIdKabupaten, setSelectedIdKabupaten] = useState<
+    number | undefined
+  >();
+  const [selectedIdKecamatan, setSelectedIdKecamatan] = useState<
+    number | undefined
+  >();
+  const [selectedIdDesa, setSelectedIdDesa] = useState<number | undefined>();
+
+  const [listKabupaten, setListKabupaten] = useState<Kabupaten | undefined>();
+  const [listKecamatan, setListKecamatan] = useState<Kecamatan | undefined>();
+  const [listDesa, setListDesa] = useState<Desa | undefined>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { kabupaten } = await getKabupaten(selectedIdProvinsi, session);
+        setListKabupaten(kabupaten);
+      } catch (error) {
+        console.error("Error fetching kabupaten:", error);
+      }
+    };
+    fetchData();
+  }, [selectedIdProvinsi]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { kecamatan } = await getKecamatan(selectedIdKabupaten, session);
+        setListKecamatan(kecamatan);
+      } catch (error) {
+        console.error("Error fetching kecamatan:", error);
+      }
+    };
+    fetchData();
+  }, [selectedIdKabupaten]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { desa } = await getDesa(selectedIdKecamatan, session);
+        setListDesa(desa);
+      } catch (error) {
+        console.error("Error fetching desa:", error);
+      }
+    };
+    fetchData();
+  }, [selectedIdKecamatan]);
+
   return (
     <form onSubmit={handleSubmit((e) => postKegiatan(e))}>
       {/* informasi umum ruas jalan */}
@@ -158,7 +218,7 @@ export default function RoadForm({
                 -- Pilih Jenis Jalan --
               </option>
               {listJenisJalan.map((data) => (
-                <option key={data.id} value={parseInt(data.id)}>
+                <option key={data.id} value={data.id}>
                   {data.jenisjalan}
                 </option>
               ))}
@@ -176,6 +236,96 @@ export default function RoadForm({
       <div className="mb-6">
         <div>
           <label
+            htmlFor="provinsi"
+            className="block mb-2 font-medium text-gray-900 text-medium"
+          >
+            Pilih Provinsi<span className="text-blue-500">*</span>
+          </label>
+          <select
+            id="provinsi"
+            onChange={(e) => {
+              setValue("provinsiId", parseInt(e.target.value));
+              setSelectedIdProvinsi(parseInt(e.target.value));
+            }}
+            className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
+          >
+            <option value="" className="text-gray-500">
+              -- Pilih Provinsi --
+            </option>
+            {listProvinsi.map((provinsi) => (
+              <option key={provinsi.id} value={provinsi.id}>
+                {provinsi.provinsi}
+              </option>
+            ))}
+          </select>
+          {errors?.provinsiId && (
+            <p className="px-1 text-xs text-red-600">
+              {errors.provinsiId.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <label
+            htmlFor="kabupaten"
+            className="block mb-2 font-medium text-gray-900 text-medium"
+          >
+            Pilih Kabupaten<span className="text-blue-500">*</span>
+          </label>
+          <select
+            id="kabupaten"
+            onChange={(e) => {
+              setValue("kabupatenId", parseInt(e.target.value));
+              setSelectedIdKabupaten(parseInt(e.target.value));
+            }}
+            className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
+          >
+            <option value="" className="text-gray-500">
+              -- Pilih Kabupaten --
+            </option>
+            {listKabupaten?.map((kabupaten) => (
+              <option key={kabupaten.id} value={kabupaten.id}>
+                {kabupaten.value}
+              </option>
+            ))}
+          </select>
+          {errors?.kabupatenId && (
+            <p className="px-1 text-xs text-red-600">
+              {errors.kabupatenId.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <label
+            htmlFor="kecamatan"
+            className="block mb-2 font-medium text-gray-900 text-medium"
+          >
+            Pilih Kecamatan<span className="text-blue-500">*</span>
+          </label>
+          <select
+            id="kecamatan"
+            onChange={(e) => {
+              setValue("kecamatanId", parseInt(e.target.value));
+              setSelectedIdKecamatan(parseInt(e.target.value));
+            }}
+            className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
+          >
+            <option value="" className="text-gray-500">
+              -- Pilih Kecamatan --
+            </option>
+            {listKecamatan?.map((kecamatan) => (
+              <option key={kecamatan.id} value={kecamatan.id}>
+                {kecamatan.value}
+              </option>
+            ))}
+          </select>
+          {errors?.kecamatanId && (
+            <p className="px-1 text-xs text-red-600">
+              {errors.kecamatanId.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <label
             htmlFor="desa"
             className="block mb-2 font-medium text-gray-900 text-medium"
           >
@@ -183,13 +333,16 @@ export default function RoadForm({
           </label>
           <select
             id="desa"
-            onChange={(e) => setValue("desaId", parseInt(e.target.value))}
+            onChange={(e) => {
+              setValue("desaId", parseInt(e.target.value));
+              setSelectedIdDesa(parseInt(e.target.value));
+            }}
             className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
           >
             <option value="" className="text-gray-500">
               -- Pilih Desa --
             </option>
-            {listDesa.map((desa) => (
+            {listDesa?.map((desa) => (
               <option key={desa.id} value={desa.id}>
                 {desa.value}
               </option>
@@ -212,16 +365,6 @@ export default function RoadForm({
         </label>
         <div className="mb-6 border-2 border-blue-300 rounded-lg">
           <DynamicMap session={session} updateParentData={receivePaths} />
-          {/* <input
-            {...register("paths")}
-            type="text"
-            id="paths"
-            className="border  text-gray-900 text-sm rounded-lg  focus:border-blue-500 focus:border-2 focus:ring-blue-500 outline-none block w-full p-2.5  border-blue-300 dark:placeholder-gray-400 "
-            required
-          ></input>
-          {errors?.paths && (
-            <p className="px-1 text-xs text-red-600">{errors.paths.message}</p>
-          )} */}
         </div>
       </div>
 

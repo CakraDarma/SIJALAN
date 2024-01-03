@@ -206,9 +206,9 @@ export default function RoadFormEdit({
             <option value="" className="text-gray-500">
               -- Pilih Desa --
             </option>
-            {listDesa.map((desa) => (
+            {listDesa.map((desa: any) => (
               <option key={desa.id} value={desa.id}>
-                {desa.value}
+                {desa.desa}
               </option>
             ))}
           </select>

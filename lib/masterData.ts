@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getAuthSession } from "./auth";
 
-export async function getDesa() {
+export async function getDesaD() {
   const session = await getAuthSession();
   try {
     const response = await axios.get(
-      "https://gisapis.manpits.xyz/api/desa/25",
+      "https://gisapis.manpits.xyz/api/mregion",
       {
         headers: {
           Authorization: `Bearer ${session?.user.accessToken}`,
@@ -17,6 +17,69 @@ export async function getDesa() {
     console.error("Terjadi kesalahan dalam pengambilan data:", error);
   }
 }
+
+export async function getProvinsi() {
+  const session = await getAuthSession();
+  try {
+    const response = await axios.get(
+      "https://gisapis.manpits.xyz/api/mregion",
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.accessToken}`,
+        },
+      }
+    );
+    return response?.data.provinsi;
+  } catch (error) {
+    console.error("Terjadi kesalahan dalam pengambilan data:", error);
+  }
+}
+export async function getKabupaten(id: number | undefined, session: any) {
+  try {
+    const response = await axios.get(
+      `https://gisapis.manpits.xyz/api/kabupaten/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.accessToken}`,
+        },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Terjadi kesalahan dalam pengambilan data:", error);
+  }
+}
+export async function getKecamatan(id: number | undefined, session: any) {
+  try {
+    const response = await axios.get(
+      `https://gisapis.manpits.xyz/api/kecamatan/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.accessToken}`,
+        },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Terjadi kesalahan dalam pengambilan data:", error);
+  }
+}
+export async function getDesa(id: number | undefined, session: any) {
+  try {
+    const response = await axios.get(
+      `https://gisapis.manpits.xyz/api/desa/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.accessToken}`,
+        },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Terjadi kesalahan dalam pengambilan data:", error);
+  }
+}
+
 export async function getEksisting() {
   const session = await getAuthSession();
   try {

@@ -1,7 +1,7 @@
 import RoadFormEdit from "@/components/RoadFormEdit";
 import { getAuthSession } from "@/lib/auth";
 import {
-  getDesa,
+  getDesaD,
   getEksisting,
   getJenisJalan,
   getKondisiJalan,
@@ -18,11 +18,13 @@ interface EditRoadPageProps {
 }
 
 export default async function EditRoadPage({ params }: EditRoadPageProps) {
-  const listDesa: Desa = await getDesa();
+  const listDesa: Desa = await getDesaD();
   const listEksisting: Eksisting = await getEksisting();
   const listJenisJalan: JenisJalan = await getJenisJalan();
   const listKondisiJalan: KondisiJalan = await getKondisiJalan();
   const dataForm: RoadData = await getRoad(params.mapsId);
+
+  console.log;
 
   const session = await getAuthSession();
   return (
